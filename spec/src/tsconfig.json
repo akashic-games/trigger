@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "declaration": false,
+    "noImplicitAny": true,
+    "outDir": "../lib",
+    "sourceMap": false
+  },
+  "includes": [
+    "./src/**/*.ts"
+  ]
+}

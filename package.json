@@ -1,0 +1,45 @@
+{
+  "name": "@akashic/trigger",
+  "version": "0.1.5",
+  "description": "An event emitting module for TypeScript",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "prepublish": "npm run clean && npm run build",
+    "clean": "rimraf -r lib/ && rimraf -r spec/lib",
+    "build": "npm run build:src",
+    "build:test": "tsc -p spec/src/",
+    "build:src": "tsc -p src/",
+    "lint": "npm run lint:src && npm run lint:test && npm run lint:md",
+    "lint:test": "tslint spec/src/*.ts -p spec/src/tsconfig.json --type-check",
+    "lint:src": "tslint src/*.ts -p src/tsconfig.json --type-check",
+    "lint:md": "remark ./*.md --frail --no-stdout --quiet --rc-path ./.remarkrc",
+    "jasmine": "istanbul cover node_modules/jasmine/bin/jasmine.js",
+    "test": "npm run build && npm run build:test && npm run jasmine && npm run lint"
+  },
+  "files": [
+    "lib",
+    "README.md",
+    "package.json"
+  ],
+  "keywords": [],
+  "author": "DWANGO Co., Ltd.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akashic-games/trigger.git"
+  },
+  "devDependencies": {
+    "@types/jasmine": "2.5.53",
+    "istanbul": "~0.4.5",
+    "jasmine": "~2.6.0",
+    "remark-cli": "~2.0.0",
+    "remark-lint": "~5.0.1",
+    "rimraf": "^2.6.1",
+    "tslint": "~5.5.0",
+    "typescript": "~2.4.1"
+  },
+  "publishConfig": {
+    "@akashic:registry": "https://registry.npmjs.org/"
+  }
+}
