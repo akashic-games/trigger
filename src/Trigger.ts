@@ -144,7 +144,7 @@ export class Trigger<T> implements TriggerLike<T> {
 			}
 		}
 
-		this.length = this._handlers.length;
+		if (this._handlers != null) this.length = this._handlers.length;
 	}
 
 	/**
