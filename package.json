@@ -30,14 +30,14 @@
     "url": "https://github.com/akashic-games/trigger.git"
   },
   "devDependencies": {
-    "@types/jasmine": "2.5.53",
+    "@types/jasmine": "3.4.6",
     "istanbul": "~0.4.5",
-    "jasmine": "~2.6.0",
-    "remark-cli": "~2.0.0",
-    "remark-lint": "~5.0.1",
-    "rimraf": "^2.6.1",
-    "tslint": "~5.5.0",
-    "typescript": "~2.4.1"
+    "jasmine": "~3.5.0",
+    "remark-cli": "~7.0.1",
+    "remark-lint": "~6.0.5",
+    "rimraf": "^3.0.0",
+    "tslint": "~5.20.1",
+    "typescript": "~3.7.2"
   },
   "publishConfig": {
     "@akashic:registry": "https://registry.npmjs.org/"
