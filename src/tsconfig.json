@@ -6,7 +6,8 @@
     "declaration": true,
     "noImplicitAny": true,
     "outDir": "../lib",
-    "sourceMap": false
+    "sourceMap": false,
+    "strict": true
   },
   "includes": [
     "./src/**/*.ts"

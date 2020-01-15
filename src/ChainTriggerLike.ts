@@ -9,6 +9,6 @@ export interface ChainTriggerLike<T> extends TriggerLike<T> {
 	 */
 	chain: TriggerLike<T>;
 
-	filter: (args?: T) => boolean;
+	filter?: (args?: T) => boolean | undefined;
 	filterOwner: any;
 }

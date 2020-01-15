@@ -3,7 +3,7 @@
  *
  * この関数がtruthyな値を返した場合、ハンドラ登録は解除される。
  */
-export type HandlerFunction<T> = (arg: T) => void | boolean;
+export type HandlerFunction<T> = (arg?: T) => void | boolean;
 
 /**
  * Triggerのハンドラ。
@@ -88,7 +88,7 @@ export interface TriggerRemoveConditions<T> {
 export interface TriggerSearchConditions<T> {
 	func?: HandlerFunction<T>;
 	owner?: any;
-	name?: string;
+	name?: string | null;
 }
 
 /**

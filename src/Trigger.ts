@@ -230,8 +230,8 @@ export class Trigger<T> implements TriggerLike<T> {
 	 * このTriggerを破棄する。
 	 */
 	destroy(): void {
-		this._handlers = null;
-		this.length = null;
+		this._handlers = null!;
+		this.length = null!;
 	}
 
 	/**
