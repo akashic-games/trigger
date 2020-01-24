@@ -16,7 +16,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 	 * フィルタ。
 	 * `chain` がfireされたときに実行される。この関数が真を返した時のみ、このインスタンスはfireされる。
 	 */
-	filter?: (args?: T) => boolean | undefined;
+	filter: ((args?: T) => boolean | undefined) | null;
 
 	/**
 	 * フィルタのオーナー。
@@ -42,9 +42,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 		super();
 
 		this.chain = chain;
-		if (filter != null) {
-			this.filter = filter;
-		}
+		this.filter = filter != null ? filter : null;
 		this.filterOwner = filterOwner;
 		this._isActivated = false;
 	}
@@ -90,7 +88,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 	destroy(): void {
 		super.destroy();
 		this.chain.remove(this._onChainTriggerFired, this);
-		this.filter = undefined;
+		this.filter = null;
 		this.filterOwner = null;
 		this._isActivated = false;
 	}
