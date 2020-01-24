@@ -1,6 +1,6 @@
 {
   "name": "@akashic/trigger",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "An event emitting module for TypeScript",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -30,14 +30,14 @@
     "url": "https://github.com/akashic-games/trigger.git"
   },
   "devDependencies": {
-    "@types/jasmine": "3.4.6",
+    "@types/jasmine": "3.5.0",
     "istanbul": "~0.4.5",
     "jasmine": "~3.5.0",
     "remark-cli": "~7.0.1",
     "remark-lint": "~6.0.5",
     "rimraf": "^3.0.0",
     "tslint": "~5.20.1",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.4"
   },
   "publishConfig": {
     "@akashic:registry": "https://registry.npmjs.org/"
