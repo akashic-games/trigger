@@ -58,7 +58,7 @@ describe("ChainTriggerの正常系テスト", () => {
 
 		const handler = () => {};
 		// thisを束縛しないためにfunction構文を利用
-		const filter = function() {
+		const filter = function(this: any) {
 			that = this;
 			return true;
 		};

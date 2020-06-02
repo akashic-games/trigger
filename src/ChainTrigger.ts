@@ -1,5 +1,5 @@
 import { TriggerLike, TriggerRemoveConditions, HandlerFunction } from "./TriggerLike";
-import { ChainTriggerLike } from "./ChainTriggerLike";
+import { ChainTriggerLike, ChainTriggerFilterFunction } from "./ChainTriggerLike";
 import { Trigger } from "./Trigger";
 
 /**
@@ -16,7 +16,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 	 * フィルタ。
 	 * `chain` がfireされたときに実行される。この関数が真を返した時のみ、このインスタンスはfireされる。
 	 */
-	filter: ((args?: T) => boolean | undefined) | null;
+	filter: ChainTriggerFilterFunction<T> | null;
 
 	/**
 	 * フィルタのオーナー。
@@ -38,7 +38,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 	 * @param filter `chain` がfireされたときに実行される関数。省略された場合、または本関数の戻り値が真の場合、このインスタンスをfireする。
 	 * @param filterOwner `filter` 呼び出し時に使われる `this` の値。
 	 */
-	constructor(chain: TriggerLike<T>, filter?: (args?: T) => boolean | undefined, filterOwner?: any) {
+	constructor(chain: TriggerLike<T>, filter?: ChainTriggerFilterFunction<T>, filterOwner?: any) {
 		super();
 
 		this.chain = chain;
@@ -96,7 +96,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 	/**
 	 * @private
 	 */
-	_onChainTriggerFired(args?: T): void {
+	_onChainTriggerFired(args: T): void {
 		if (!this.filter || this.filter.call(this.filterOwner, args)) {
 			this.fire(args);
 		}
