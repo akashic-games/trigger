@@ -101,7 +101,7 @@ describe("Triggerの正常系テスト", () => {
 		const owner = { num: 0 };
 		const nums = [] as number[];
 
-		function f(x: number) {
+		function f(this: { num: number; }, x: number) {
 			this.num += x;
 		}
 
@@ -136,7 +136,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("fire()にパラメータを与えて実行することができる", () => {
 		const trigger = new Trigger<any>();
-		let args = null;
+		let args: any = null;
 		const handler = (a: any) => {
 			args = a;
 		};
@@ -147,19 +147,19 @@ describe("Triggerの正常系テスト", () => {
 	});
 
 	it("fire()で実行されたhandler内のthisが正常に解決されている", () => {
-		const trigger = new Trigger<any>();
+		const trigger = new Trigger();
 
-		let that = null;
+		let that: any = null;
 		const testOwner = { testMethod: () => "test" };
 
 		// thisを束縛しないためにfunction構文を利用
-		const handler = function() {
+		const handler = function(this: any) {
 			that = this;
 		};
 
 		trigger.add(handler);
 		trigger.fire();
-		expect(that).toBe(undefined);
+		expect(that).toBeUndefined();
 
 		trigger.add(handler, testOwner);
 		trigger.fire();
@@ -169,7 +169,7 @@ describe("Triggerの正常系テスト", () => {
 	it("fire()で実行されたhandlerが真を返すと削除される", () => {
 		const trigger = new Trigger<any>();
 
-		function handler(x: any) {
+		function handler(this: {overrideValue: boolean}, x: any) {
 			return !!(this && this.overrideValue) || !!x;
 		}
 		const owner = { overrideValue: false };
@@ -197,7 +197,7 @@ describe("Triggerの正常系テスト", () => {
 	});
 
 	it("addOnce()で追加したhandlerがfire()した後に消える", () => {
-		const trigger = new Trigger<any>();
+		const trigger = new Trigger();
 		let counter = 0;
 		const handler1 = () => {
 			counter++;
@@ -221,7 +221,7 @@ describe("Triggerの正常系テスト", () => {
 	});
 
 	it("add()で追加したhandlerが配列の要素順に実行される", () => {
-		const trigger = new Trigger<any>();
+		const trigger = new Trigger();
 		const order = [] as number[];
 		const handler1 = () => {
 			order.push(1);
@@ -245,7 +245,7 @@ describe("Triggerの正常系テスト", () => {
 	});
 
 	it("addOnce()で追加したhandlerが配列の要素順に実行される", () => {
-		const trigger = new Trigger<any>();
+		const trigger = new Trigger();
 		const order = [] as number[];
 		const handler1 = () => {
 			order.push(1);
@@ -269,7 +269,7 @@ describe("Triggerの正常系テスト", () => {
 	});
 
 	it("add(), addOnce()で同じhandlerを複数追加しても正しく実行される", () => {
-		const trigger = new Trigger<any>();
+		const trigger = new Trigger();
 		let counter = 0;
 		const handler = () => {
 			counter++;

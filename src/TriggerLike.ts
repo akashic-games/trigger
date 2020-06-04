@@ -3,7 +3,7 @@
  *
  * この関数がtruthyな値を返した場合、ハンドラ登録は解除される。
  */
-export type HandlerFunction<T> = (arg?: T) => void | boolean;
+export type HandlerFunction<T> = (arg: T) => void | boolean;
 
 /**
  * Triggerのハンドラ。

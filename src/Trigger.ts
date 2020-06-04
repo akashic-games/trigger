@@ -10,7 +10,7 @@ import {
 /**
  * イベント通知機構クラス。
  */
-export class Trigger<T> implements TriggerLike<T> {
+export class Trigger<T = void> implements TriggerLike<T> {
 	/**
 	 * 登録されているイベントハンドラの数。
 	 */
@@ -130,7 +130,7 @@ export class Trigger<T> implements TriggerLike<T> {
 	 *
 	 * @param arg ハンドラに与えられる引数
 	 */
-	fire(arg?: T): void {
+	fire(arg: T): void {
 		if (! this._handlers || ! this._handlers.length)
 			return;
 

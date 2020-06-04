@@ -2,9 +2,10 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
+    "outDir": "../lib",
     "declaration": false,
     "noImplicitAny": true,
-    "outDir": "../lib",
+    "strict": true,
     "sourceMap": false
   },
   "includes": [
