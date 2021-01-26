@@ -1,5 +1,5 @@
-import { TriggerLike } from "../../lib/TriggerLike";
 import { Trigger } from "../../lib/Trigger";
+import { TriggerLike } from "../../lib/TriggerLike";
 
 describe("Triggerの正常系テスト", () => {
 	it("初期化", () => {
@@ -101,11 +101,13 @@ describe("Triggerの正常系テスト", () => {
 		const owner = { num: 0 };
 		const nums = [] as number[];
 
-		function f(this: { num: number; }, x: number) {
+		function f(this: { num: number }, x: number) {
 			this.num += x;
 		}
 
-		trigger.handle((x: number) => { nums.push(x); });
+		trigger.handle((x: number) => {
+			nums.push(x);
+		});
 		trigger.handle(owner, f, "ownered");
 
 		trigger.fire(3);
@@ -483,7 +485,9 @@ describe("Triggerの正常系テスト", () => {
 	it("remove()できる: handlerを重複して登録", () => {
 		const trigger = new Trigger<void>();
 		let count = 0;
-		const handler = () => { count++; };
+		const handler = () => {
+			count++;
+		};
 		const anotherHander = () => {};
 
 		expect(trigger.length).toBe(0);
@@ -719,9 +723,15 @@ describe("Triggerの異常系テスト", () => {
 	it("fire()中でremoveAll()した場合でも正常に動作する", () => {
 		const trigger = new Trigger<void>();
 		const order: number[] = [];
-		trigger.add(() => { order.push(1); trigger.removeAll(); });
-		trigger.add(() => { order.push(2); });
-		trigger.add(() => { order.push(3); });
+		trigger.add(() => {
+			order.push(1); trigger.removeAll();
+		});
+		trigger.add(() => {
+			order.push(2);
+		});
+		trigger.add(() => {
+			order.push(3);
+		});
 
 		trigger.fire();
 		expect(order).toEqual([1, 2, 3]);
@@ -730,9 +740,15 @@ describe("Triggerの異常系テスト", () => {
 	it("fire()中でdestroy()した場合でも正常に動作する", () => {
 		const trigger = new Trigger<void>();
 		const order: number[] = [];
-		trigger.add(() => { order.push(1); trigger.destroy(); });
-		trigger.add(() => { order.push(2); });
-		trigger.add(() => { order.push(3); });
+		trigger.add(() => {
+			order.push(1); trigger.destroy();
+		});
+		trigger.add(() => {
+			order.push(2);
+		});
+		trigger.add(() => {
+			order.push(3);
+		});
 
 		trigger.fire();
 		expect(order).toEqual([1, 2, 3]);

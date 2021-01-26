@@ -1,5 +1,5 @@
-import { Trigger } from "../../lib/Trigger";
 import { ChainTrigger } from "../../lib/ChainTrigger";
+import { Trigger } from "../../lib/Trigger";
 
 describe("ChainTriggerの正常系テスト", () => {
 	it("初期化", () => {
@@ -20,7 +20,9 @@ describe("ChainTriggerの正常系テスト", () => {
 		const filterOwner = {};
 		const chainTrigger = new ChainTrigger<boolean>(trigger, filter, filterOwner);
 		let counter = 0;
-		const handler = (param: boolean) => { counter++; };
+		const handler = (param: boolean) => {
+			counter++;
+		};
 		chainTrigger.add(handler);
 
 		trigger.fire(false);
@@ -74,8 +76,12 @@ describe("ChainTriggerの正常系テスト", () => {
 		const trigger = new Trigger<void>();
 		const chainTrigger = new ChainTrigger<void>(trigger);
 		let result = "";
-		const handler1 = () => { result += "1"; };
-		const handler2 = () => { result += "2"; };
+		const handler1 = () => {
+			result += "1";
+		};
+		const handler2 = () => {
+			result += "2";
+		};
 		expect(trigger.length).toBe(0);
 		chainTrigger.add(handler1);
 		expect(trigger.length).toBe(1);
@@ -99,8 +105,12 @@ describe("ChainTriggerの正常系テスト", () => {
 		const trigger = new Trigger<void>();
 		const chainTrigger = new ChainTrigger<void>(trigger);
 		let result = "";
-		const handler1 = () => { result += "1"; };
-		const handler2 = () => { result += "2"; };
+		const handler1 = () => {
+			result += "1";
+		};
+		const handler2 = () => {
+			result += "2";
+		};
 		expect(trigger.length).toBe(0);
 		chainTrigger.add(handler1);
 		expect(trigger.length).toBe(1);
