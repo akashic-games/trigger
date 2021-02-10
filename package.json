@@ -10,9 +10,8 @@
     "build": "npm run build:src",
     "build:test": "tsc -p spec/src/",
     "build:src": "tsc -p src/",
-    "lint": "npm run lint:src && npm run lint:test && npm run lint:md",
-    "lint:src": "eslint -c .eslintrc src/**/*.ts --fix",
-    "lint:test": "eslint -c spec/src/.eslintrc spec/src/*.ts --fix",
+    "lint": "npm run lint:ts && npm run lint:md",
+    "lint:ts": "eslint src/**/*.ts spec/src/*.ts --fix",
     "lint:md": "remark ./*.md --frail --no-stdout --quiet --rc-path ./.remarkrc",
     "jasmine": "istanbul cover node_modules/jasmine/bin/jasmine.js",
     "test": "npm run build && npm run build:test && npm run jasmine && npm run lint"

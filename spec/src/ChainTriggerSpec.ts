@@ -5,7 +5,7 @@ describe("ChainTriggerの正常系テスト", () => {
 	it("初期化", () => {
 		const trigger = new Trigger();
 		const filterOwner = {};
-		const filter = () => true;
+		const filter = (): boolean => true;
 		const chainTrigger = new ChainTrigger(trigger, filter, filterOwner);
 
 		expect(chainTrigger.chain).toBe(trigger);
@@ -16,11 +16,11 @@ describe("ChainTriggerの正常系テスト", () => {
 	it("fire()できる", () => {
 		const trigger = new Trigger<boolean>();
 
-		const filter = (e: boolean) => e;
+		const filter = (e: boolean): boolean => e;
 		const filterOwner = {};
 		const chainTrigger = new ChainTrigger<boolean>(trigger, filter, filterOwner);
 		let counter = 0;
-		const handler = (param: boolean) => {
+		const handler = (_param: boolean): void => {
 			counter++;
 		};
 		chainTrigger.add(handler);
@@ -40,11 +40,13 @@ describe("ChainTriggerの正常系テスト", () => {
 	it("addOnce()できる", () => {
 		const trigger = new Trigger<void>();
 
-		const filter = () => true;
+		const filter = (): boolean => true;
 		const filterOwner = {};
 		const chainTrigger = new ChainTrigger<void>(trigger, filter, filterOwner);
 		let counter = 0;
-		const handler = () => counter++;
+		const handler = (): void => {
+			counter++;
+		};
 		chainTrigger.addOnce(handler);
 
 		trigger.fire();
@@ -58,9 +60,9 @@ describe("ChainTriggerの正常系テスト", () => {
 		const trigger = new Trigger<void>();
 		let that: any;
 
-		const handler = () => {};
+		const handler = (): void => {};
 		// thisを束縛しないためにfunction構文を利用
-		const filter = function(this: any) {
+		const filter = function(this: any): boolean {
 			that = this;
 			return true;
 		};
@@ -76,10 +78,10 @@ describe("ChainTriggerの正常系テスト", () => {
 		const trigger = new Trigger<void>();
 		const chainTrigger = new ChainTrigger<void>(trigger);
 		let result = "";
-		const handler1 = () => {
+		const handler1 = (): void => {
 			result += "1";
 		};
-		const handler2 = () => {
+		const handler2 = (): void => {
 			result += "2";
 		};
 		expect(trigger.length).toBe(0);
@@ -105,10 +107,10 @@ describe("ChainTriggerの正常系テスト", () => {
 		const trigger = new Trigger<void>();
 		const chainTrigger = new ChainTrigger<void>(trigger);
 		let result = "";
-		const handler1 = () => {
+		const handler1 = (): void => {
 			result += "1";
 		};
-		const handler2 = () => {
+		const handler2 = (): void => {
 			result += "2";
 		};
 		expect(trigger.length).toBe(0);
@@ -134,10 +136,10 @@ describe("ChainTriggerの正常系テスト", () => {
 		const trigger = new Trigger<void>();
 
 		let counter = 0;
-		const handler = () => {
+		const handler = (): void => {
 			counter++;
 		};
-		const filter = () => true;
+		const filter = (): boolean => true;
 		const filterOwner = {};
 		const chainTrigger = new ChainTrigger<void>(trigger, filter, filterOwner);
 
