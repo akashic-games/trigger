@@ -1,6 +1,6 @@
-import { TriggerLike, TriggerRemoveConditions, HandlerFunction } from "./TriggerLike";
 import { ChainTriggerLike, ChainTriggerFilterFunction } from "./ChainTriggerLike";
 import { Trigger } from "./Trigger";
+import { TriggerLike, TriggerRemoveConditions, HandlerFunction } from "./TriggerLike";
 
 /**
  * 他のTriggerLikeに反応して発火するイベント通知機構。

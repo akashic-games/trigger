@@ -1,5 +1,5 @@
-import { TriggerLike } from "../../lib/TriggerLike";
 import { Trigger } from "../../lib/Trigger";
+import { TriggerLike } from "../../lib/TriggerLike";
 
 describe("Triggerの正常系テスト", () => {
 	it("初期化", () => {
@@ -10,13 +10,13 @@ describe("Triggerの正常系テスト", () => {
 
 	it("add()できる", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
-		const handler3 = () => {};
-		const handler4 = () => {};
-		const handler5 = () => {};
-		const handler6 = () => {};
-		const handler7 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
+		const handler3 = (): void => {};
+		const handler4 = (): void => {};
+		const handler5 = (): void => {};
+		const handler6 = (): void => {};
+		const handler7 = (): void => {};
 		const owner1 = {};
 		const owner2 = {};
 		const owner3 = {};
@@ -54,13 +54,13 @@ describe("Triggerの正常系テスト", () => {
 
 	it("addOnce()できる", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
-		const handler3 = () => {};
-		const handler4 = () => {};
-		const handler5 = () => {};
-		const handler6 = () => {};
-		const handler7 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
+		const handler3 = (): void => {};
+		const handler4 = (): void => {};
+		const handler5 = (): void => {};
+		const handler6 = (): void => {};
+		const handler7 = (): void => {};
 		const owner1 = {};
 		const owner2 = {};
 		const owner3 = {};
@@ -101,11 +101,13 @@ describe("Triggerの正常系テスト", () => {
 		const owner = { num: 0 };
 		const nums = [] as number[];
 
-		function f(this: { num: number; }, x: number) {
+		function f(this: { num: number }, x: number): void {
 			this.num += x;
 		}
 
-		trigger.handle((x: number) => { nums.push(x); });
+		trigger.handle((x: number) => {
+			nums.push(x);
+		});
 		trigger.handle(owner, f, "ownered");
 
 		trigger.fire(3);
@@ -122,7 +124,7 @@ describe("Triggerの正常系テスト", () => {
 	it("fire()できる", () => {
 		const trigger: TriggerLike<boolean> = new Trigger<boolean>();
 		let counter = 0;
-		const handler = () => {
+		const handler = (): void => {
 			counter++;
 		};
 
@@ -137,7 +139,7 @@ describe("Triggerの正常系テスト", () => {
 	it("fire()にパラメータを与えて実行することができる", () => {
 		const trigger = new Trigger<any>();
 		let args: any = null;
-		const handler = (a: any) => {
+		const handler = (a: any): void => {
 			args = a;
 		};
 
@@ -153,7 +155,7 @@ describe("Triggerの正常系テスト", () => {
 		const testOwner = { testMethod: () => "test" };
 
 		// thisを束縛しないためにfunction構文を利用
-		const handler = function(this: any) {
+		const handler = function(this: any): void {
 			that = this;
 		};
 
@@ -169,7 +171,7 @@ describe("Triggerの正常系テスト", () => {
 	it("fire()で実行されたhandlerが真を返すと削除される", () => {
 		const trigger = new Trigger<any>();
 
-		function handler(this: {overrideValue: boolean}, x: any) {
+		function handler(this: {overrideValue: boolean}, x: any): boolean {
 			return !!(this && this.overrideValue) || !!x;
 		}
 		const owner = { overrideValue: false };
@@ -199,13 +201,13 @@ describe("Triggerの正常系テスト", () => {
 	it("addOnce()で追加したhandlerがfire()した後に消える", () => {
 		const trigger = new Trigger();
 		let counter = 0;
-		const handler1 = () => {
+		const handler1 = (): void => {
 			counter++;
 		};
-		const handler2 = () => {
+		const handler2 = (): void => {
 			counter++;
 		};
-		const handler3 = () => {
+		const handler3 = (): void => {
 			counter++;
 		};
 
@@ -223,16 +225,16 @@ describe("Triggerの正常系テスト", () => {
 	it("add()で追加したhandlerが配列の要素順に実行される", () => {
 		const trigger = new Trigger();
 		const order = [] as number[];
-		const handler1 = () => {
+		const handler1 = (): void => {
 			order.push(1);
 		};
-		const handler2 = () => {
+		const handler2 = (): void => {
 			order.push(2);
 		};
-		const handler3 = () => {
+		const handler3 = (): void => {
 			order.push(3);
 		};
-		const handler4 = () => {
+		const handler4 = (): void => {
 			order.push(4);
 		};
 
@@ -247,16 +249,16 @@ describe("Triggerの正常系テスト", () => {
 	it("addOnce()で追加したhandlerが配列の要素順に実行される", () => {
 		const trigger = new Trigger();
 		const order = [] as number[];
-		const handler1 = () => {
+		const handler1 = (): void => {
 			order.push(1);
 		};
-		const handler2 = () => {
+		const handler2 = (): void => {
 			order.push(2);
 		};
-		const handler3 = () => {
+		const handler3 = (): void => {
 			order.push(3);
 		};
-		const handler4 = () => {
+		const handler4 = (): void => {
 			order.push(4);
 		};
 
@@ -271,7 +273,7 @@ describe("Triggerの正常系テスト", () => {
 	it("add(), addOnce()で同じhandlerを複数追加しても正しく実行される", () => {
 		const trigger = new Trigger();
 		let counter = 0;
-		const handler = () => {
+		const handler = (): void => {
 			counter++;
 		};
 
@@ -298,7 +300,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("contains()できる: handlerのみを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler = () => {};
+		const handler = (): void => {};
 
 		expect(trigger.contains(handler)).toBe(false);
 		trigger.add(handler);
@@ -309,7 +311,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("contains()できる: handlerとownerを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler = () => {};
+		const handler = (): void => {};
 		const owner = {};
 
 		expect(trigger.contains(handler)).toBe(false);
@@ -325,7 +327,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("contains()できる: handlerとnameを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler = () => {};
+		const handler = (): void => {};
 
 		expect(trigger.contains(handler)).toBe(false);
 		expect(trigger.contains({func: handler})).toBe(false);
@@ -339,7 +341,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("contains()できる: handlerとownerとnameを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler = () => {};
+		const handler = (): void => {};
 		const owner = {};
 
 		expect(trigger.contains(handler)).toBe(false);
@@ -359,7 +361,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("contains()できる: 複数のhandler", () => {
 		const trigger = new Trigger<void>();
-		const handler = () => {};
+		const handler = (): void => {};
 		const owner = {};
 
 		expect(trigger.contains(handler)).toBe(false);
@@ -389,7 +391,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("remove()できる: handlerのみを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler = () => {};
+		const handler = (): void => {};
 
 		expect(trigger.length).toBe(0);
 		trigger.add(handler);
@@ -404,7 +406,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("remove()できる: handlerのみを登録した後にowner, nameを指定してremove()しても削除されない", () => {
 		const trigger = new Trigger<void>();
-		const handler = () => {};
+		const handler = (): void => {};
 
 		expect(trigger.length).toBe(0);
 		trigger.add(handler);
@@ -430,8 +432,8 @@ describe("Triggerの正常系テスト", () => {
 
 	it("remove()できる: 複数のhandlerを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
 
 		expect(trigger.length).toBe(0);
 		trigger.add(handler1);
@@ -455,8 +457,8 @@ describe("Triggerの正常系テスト", () => {
 
 	it("remove()できる: handlerとownerを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
 		const owner1 = {};
 		const owner2 = {};
 
@@ -483,8 +485,10 @@ describe("Triggerの正常系テスト", () => {
 	it("remove()できる: handlerを重複して登録", () => {
 		const trigger = new Trigger<void>();
 		let count = 0;
-		const handler = () => { count++; };
-		const anotherHander = () => {};
+		const handler = (): void => {
+			count++;
+		};
+		const anotherHander = (): void => {};
 
 		expect(trigger.length).toBe(0);
 		trigger.add(anotherHander);
@@ -515,9 +519,9 @@ describe("Triggerの正常系テスト", () => {
 
 	it("removeAll()できる", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
-		const handler3 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
+		const handler3 = (): void => {};
 
 		expect(trigger.length).toBe(0);
 		trigger.add(handler1);
@@ -538,8 +542,8 @@ describe("Triggerの正常系テスト", () => {
 
 	it("removeAll()できる: handlerのみを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
 
 		expect(trigger.length).toBe(0);
 		trigger.add(handler1);
@@ -558,9 +562,9 @@ describe("Triggerの正常系テスト", () => {
 
 	it("removeAll()できる: nameのみを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
-		const handler3 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
+		const handler3 = (): void => {};
 
 		expect(trigger.length).toBe(0);
 		trigger.add({func: handler1, name: "testHandler1"});
@@ -581,9 +585,9 @@ describe("Triggerの正常系テスト", () => {
 
 	it("removeAll()できる: ownerのみを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
-		const handler3 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
+		const handler3 = (): void => {};
 		const owner1 = {};
 		const owner2 = {};
 
@@ -606,12 +610,12 @@ describe("Triggerの正常系テスト", () => {
 
 	it("removeAll()できる: nameとownerを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
-		const handler3 = () => {};
-		const handler4 = () => {};
-		const handler5 = () => {};
-		const handler6 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
+		const handler3 = (): void => {};
+		const handler4 = (): void => {};
+		const handler5 = (): void => {};
+		const handler6 = (): void => {};
 		const owner1 = {};
 		const owner2 = {};
 
@@ -653,9 +657,9 @@ describe("Triggerの正常系テスト", () => {
 
 	it("removeAll()できる: handler, owner, nameを登録した後にhandler, owner, nameをそれぞれ指定してremoveAll()すると削除される", () => {
 		const trigger = new Trigger<void>();
-		const handler1 = () => {};
-		const handler2 = () => {};
-		const handler3 = () => {};
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
+		const handler3 = (): void => {};
 		const owner1 = {};
 		const owner2 = {};
 		const owner3 = {};
@@ -690,7 +694,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("destroy()できる", () => {
 		const trigger = new Trigger<void>();
-		const handler = () => {};
+		const handler = (): void => {};
 		trigger.add(handler);
 		expect(trigger.length).toBe(1);
 		expect(trigger.destroyed()).toBe(false);
@@ -719,9 +723,15 @@ describe("Triggerの異常系テスト", () => {
 	it("fire()中でremoveAll()した場合でも正常に動作する", () => {
 		const trigger = new Trigger<void>();
 		const order: number[] = [];
-		trigger.add(() => { order.push(1); trigger.removeAll(); });
-		trigger.add(() => { order.push(2); });
-		trigger.add(() => { order.push(3); });
+		trigger.add((): void => {
+			order.push(1); trigger.removeAll();
+		});
+		trigger.add((): void => {
+			order.push(2);
+		});
+		trigger.add((): void => {
+			order.push(3);
+		});
 
 		trigger.fire();
 		expect(order).toEqual([1, 2, 3]);
@@ -730,9 +740,15 @@ describe("Triggerの異常系テスト", () => {
 	it("fire()中でdestroy()した場合でも正常に動作する", () => {
 		const trigger = new Trigger<void>();
 		const order: number[] = [];
-		trigger.add(() => { order.push(1); trigger.destroy(); });
-		trigger.add(() => { order.push(2); });
-		trigger.add(() => { order.push(3); });
+		trigger.add((): void => {
+			order.push(1); trigger.destroy();
+		});
+		trigger.add((): void => {
+			order.push(2);
+		});
+		trigger.add((): void => {
+			order.push(3);
+		});
 
 		trigger.fire();
 		expect(order).toEqual([1, 2, 3]);
@@ -740,7 +756,7 @@ describe("Triggerの異常系テスト", () => {
 
 	it("ハンドラが削除されれば、fireしても関数は動作しない", () => {
 		let counter = 0;
-		const mockHandle = () => {
+		const mockHandle = (): void => {
 			counter++;
 		};
 		const trigger = new Trigger<void>();

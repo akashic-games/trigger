@@ -10,9 +10,8 @@
     "build": "npm run build:src",
     "build:test": "tsc -p spec/src/",
     "build:src": "tsc -p src/",
-    "lint": "npm run lint:src && npm run lint:test && npm run lint:md",
-    "lint:test": "tslint spec/src/*.ts -p spec/src/tsconfig.json --type-check",
-    "lint:src": "tslint src/*.ts -p src/tsconfig.json --type-check",
+    "lint": "npm run lint:ts && npm run lint:md",
+    "lint:ts": "eslint src/**/*.ts spec/src/*.ts --fix",
     "lint:md": "remark ./*.md --frail --no-stdout --quiet --rc-path ./.remarkrc",
     "jasmine": "istanbul cover node_modules/jasmine/bin/jasmine.js",
     "test": "npm run build && npm run build:test && npm run jasmine && npm run lint"
@@ -30,13 +29,17 @@
     "url": "https://github.com/akashic-games/trigger.git"
   },
   "devDependencies": {
+    "@akashic/eslint-config": "^0.1.2",
     "@types/jasmine": "3.5.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "eslint": "^7.18.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.3",
     "istanbul": "~0.4.5",
     "jasmine": "~3.5.0",
     "remark-cli": "~7.0.1",
     "remark-lint": "~6.0.5",
     "rimraf": "^3.0.0",
-    "tslint": "~5.20.1",
     "typescript": "~3.7.4"
   },
   "publishConfig": {
