@@ -10,5 +10,19 @@
   "separateMinorPatch": false,
   "separateMajorMinor": false,
   "pin": false,
-  "rangeStrategy": "bump"
+  "rangeStrategy": "bump",
+  "groupName": "all dependencies",
+  "groupSlug": "all",
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "groupName": "all dependencies",
+      "groupSlug": "all"
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": false
+  }
 }
