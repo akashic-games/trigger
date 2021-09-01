@@ -1,5 +1,13 @@
 {
   "extends": [
     "config:base"
-  ]
+  ],
+  "timezone": "Asia/Tokyo",
+  "schedule": ["every weekend"],
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "separateMinorPatch": false,
+  "pin": false,
+  "rangeStrategy": "bump"
 }
