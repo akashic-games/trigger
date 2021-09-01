@@ -8,6 +8,7 @@
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
   "separateMinorPatch": false,
+  "separateMajorMinor": false,
   "pin": false,
   "rangeStrategy": "bump"
 }
