@@ -1,5 +1,5 @@
 import { Trigger } from "../../lib/Trigger";
-import { TriggerLike } from "../../lib/TriggerLike";
+import type { TriggerLike } from "../../lib/TriggerLike";
 
 describe("Triggerの正常系テスト", () => {
 	it("初期化", () => {

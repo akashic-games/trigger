@@ -1,4 +1,4 @@
-import { TriggerLike } from "./TriggerLike";
+import type { TriggerLike } from "./TriggerLike";
 
 export type ChainTriggerFilterFunction<T> = ((args: T) => void | boolean | undefined);
 
