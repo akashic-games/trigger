@@ -31,16 +31,16 @@
   "devDependencies": {
     "@akashic/eslint-config": "^1.1.0",
     "@types/jasmine": "4.0.3",
-    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
     "eslint": "^8.16.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.2.2",
+    "eslint-plugin-jest": "^26.4.5",
     "istanbul": "~0.4.5",
     "jasmine": "~4.1.0",
     "remark-cli": "~10.0.1",
     "remark-lint": "~9.1.1",
     "rimraf": "^3.0.2",
-    "typescript": "~4.6.4"
+    "typescript": "~4.7.2"
   },
   "publishConfig": {
     "@akashic:registry": "https://registry.npmjs.org/"
