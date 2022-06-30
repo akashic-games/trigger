@@ -138,6 +138,8 @@ export class Trigger<T = void> implements TriggerLike<T> {
 		for (let i = 0; i < handlers.length; i++) {
 			const handler = handlers[i];
 			if (handler.func.call(handler.owner, arg) || handler.once) {
+				if (!this._handlers)
+					return;
 				const index = this._handlers.indexOf(handler);
 				if (index !== -1)
 					this._handlers.splice(index, 1);
