@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## 1.0.1
-* `Trigger#addOnce()` のハンドラ内で `destroy()` が呼ばれるた際にクラッシュしたしまうバグを修正
+* `Trigger#addOnce()` のハンドラ内で `destroy()` が呼ばれた際にクラッシュしてしまうバグを修正
 
 ## 1.0.0
 * `Trigger` にジェネリクスが指定された場合は `Trigger#fire()` の引数を省略不可に
