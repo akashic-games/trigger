@@ -754,6 +754,16 @@ describe("Triggerの異常系テスト", () => {
 		expect(order).toEqual([1, 2, 3]);
 	});
 
+	it("addOnce()でfire()中にdestroy()した場合でも正常に動作する ", () => {
+		const trigger = new Trigger<void>();
+		trigger.addOnce((): void => {
+			trigger.destroy();
+		});
+		trigger.fire();
+		expect(trigger.destroyed()).toBeTrue();
+		expect(trigger._handlers).toBeNull();
+	});
+
 	it("ハンドラが削除されれば、fireしても関数は動作しない", () => {
 		let counter = 0;
 		const mockHandle = (): void => {
