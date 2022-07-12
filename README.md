@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/akashic-games/trigger/blob/master/img/akashic.png"/>
+<img src="https://raw.githubusercontent.com/akashic-games/trigger/main/img/akashic.png"/>
 </p>
 
 # Trigger
