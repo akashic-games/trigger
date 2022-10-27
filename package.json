@@ -29,7 +29,7 @@
     "url": "https://github.com/akashic-games/trigger.git"
   },
   "devDependencies": {
-    "@akashic/eslint-config": "^1.1.0",
+    "@akashic/eslint-config": "^1.1.1",
     "@types/jasmine": "4.3.0",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "eslint": "^8.19.0",
