@@ -29,18 +29,18 @@
     "url": "https://github.com/akashic-games/trigger.git"
   },
   "devDependencies": {
-    "@akashic/eslint-config": "^1.1.0",
-    "@types/jasmine": "4.0.3",
+    "@akashic/eslint-config": "^1.1.1",
+    "@types/jasmine": "4.3.0",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "eslint": "^8.19.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.5.3",
+    "eslint-plugin-jest": "^27.0.0",
     "istanbul": "~0.4.5",
-    "jasmine": "~4.2.1",
+    "jasmine": "~4.4.0",
     "remark-cli": "~11.0.0",
     "remark-lint": "~9.1.1",
     "rimraf": "^3.0.2",
-    "typescript": "~4.7.4"
+    "typescript": "~4.8.0"
   },
   "publishConfig": {
     "@akashic:registry": "https://registry.npmjs.org/"
