@@ -6,7 +6,8 @@
     "declaration": false,
     "noImplicitAny": true,
     "strict": true,
-    "sourceMap": false
+    "sourceMap": false,
+    "skipLibCheck": true
   },
   "includes": [
     "./src/**/*.ts"
