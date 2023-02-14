@@ -6,7 +6,7 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "prepare": "npm run clean && npm run build",
-    "clean": "rimraf -r lib/ && rimraf -r spec/lib",
+    "clean": "rimraf lib/ && rimraf spec/lib",
     "build": "npm run build:src",
     "build:test": "tsc -p spec/src/",
     "build:src": "tsc -p src/",
