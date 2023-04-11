@@ -1,5 +1,8 @@
-import { Trigger } from "../../lib/Trigger";
-import type { TriggerLike } from "../../lib/TriggerLike";
+// FIXME: lint の修正
+/* eslint-disable @typescript-eslint/no-empty-function */
+
+import { Trigger } from "../Trigger";
+import type { TriggerLike } from "../TriggerLike";
 
 describe("Triggerの正常系テスト", () => {
 	it("初期化", () => {
@@ -760,7 +763,7 @@ describe("Triggerの異常系テスト", () => {
 			trigger.destroy();
 		});
 		trigger.fire();
-		expect(trigger.destroyed()).toBeTrue();
+		expect(trigger.destroyed()).toBe(true);
 		expect(trigger._handlers).toBeNull();
 	});
 
