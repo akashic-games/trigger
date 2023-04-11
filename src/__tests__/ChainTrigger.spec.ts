@@ -1,5 +1,8 @@
-import { ChainTrigger } from "../../lib/ChainTrigger";
-import { Trigger } from "../../lib/Trigger";
+// FIXME: lint の修正
+/* eslint-disable @typescript-eslint/no-empty-function */
+
+import { ChainTrigger } from "../ChainTrigger";
+import { Trigger } from "../Trigger";
 
 describe("ChainTriggerの正常系テスト", () => {
 	it("初期化", () => {

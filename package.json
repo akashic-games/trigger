@@ -6,15 +6,13 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "prepare": "npm run clean && npm run build",
-    "clean": "rimraf lib/ && rimraf spec/lib",
-    "build": "npm run build:src",
-    "build:test": "tsc -p spec/src/",
-    "build:src": "tsc -p src/",
-    "lint": "npm run lint:ts && npm run lint:md",
-    "lint:ts": "eslint src/**/*.ts spec/src/*.ts --fix",
-    "lint:md": "remark ./*.md --frail --no-stdout --quiet --rc-path ./.remarkrc",
-    "jasmine": "istanbul cover node_modules/jasmine/bin/jasmine.js",
-    "test": "npm run build && npm run build:test && npm run jasmine && npm run lint"
+    "clean": "rimraf lib/",
+    "build": "tsc",
+    "test": "npm run test:jest && npm run test:lint",
+    "test:jest": "jest --config jest.config.js",
+    "test:lint": "run-s test:lint:*",
+    "test:lint:ts": "eslint src/**/*.ts --fix",
+    "test:lint:md": "remark ./*.md --frail --no-stdout --quiet --rc-path ./.remarkrc"
   },
   "files": [
     "lib",
@@ -30,16 +28,15 @@
   },
   "devDependencies": {
     "@akashic/eslint-config": "^1.1.1",
-    "@types/jasmine": "^4.3.0",
+    "@types/jest": "^29.5.0",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "eslint": "^8.27.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^27.1.5",
-    "istanbul": "^0.4.5",
-    "jasmine": "^4.5.0",
+    "jest": "^29.5.0",
+    "npm-run-all": "^4.1.5",
     "remark-cli": "^11.0.0",
     "remark-lint": "^9.1.1",
     "rimraf": "^4.0.0",
+    "ts-jest": "^29.1.0",
     "typescript": "^5.0.0"
   },
   "publishConfig": {
