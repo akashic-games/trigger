@@ -1,3 +1,4 @@
+import { isPromise } from "./isPromise";
 import type {
 	HandlerFunction,
 	TriggerHandler,
@@ -126,7 +127,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	 * 呼び出し後、次のいずれかの条件を満たす全ハンドラの登録は解除される。
 	 * * ハンドラが `addOnce()` で登録されていた場合
 	 * * ハンドラが `add()` で登録される際に `once: true` オプションが与えられていた場合
-	 * * 関数がtruthyな値を返した場合
+	 * * ハンドラが同期関数で、かつ truthy な値を返した場合
 	 *
 	 * @param arg ハンドラに与えられる引数
 	 */
@@ -137,7 +138,9 @@ export class Trigger<T = void> implements TriggerLike<T> {
 		const handlers = this._handlers.concat();
 		for (let i = 0; i < handlers.length; i++) {
 			const handler = handlers[i];
-			if (handler.func.call(handler.owner, arg) || handler.once) {
+			const ret = handler.func.call<unknown, [T], void | boolean | Promise<unknown>>(handler.owner, arg);
+			const returnedTruthy = isPromise(ret) ? false : !!ret;
+			if (returnedTruthy || handler.once) {
 				if (!this._handlers)
 					continue;
 				const index = this._handlers.indexOf(handler);

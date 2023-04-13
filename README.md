@@ -54,6 +54,11 @@ t.addOnce((s: string) => {
     // do something
 });
 
+// 非同期関数のハンドラを追加
+t.addOnce(async (s: string) => {
+    // do something
+});
+
 // 全登録ハンドラを起動
 t.fire("some-string-value");
 

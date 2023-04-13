@@ -3,7 +3,11 @@
  *
  * この関数がtruthyな値を返した場合、ハンドラ登録は解除される。
  */
-export type HandlerFunction<T> = (arg: T) => void | boolean;
+export type HandlerFunction<T> = HandlerSyncFunction<T> | HandlerAsyncFunction<T>;
+
+export type HandlerSyncFunction<T> = (arg: T) => void | boolean;
+
+export type HandlerAsyncFunction<T> = (arg: T) => Promise<unknown>;
 
 /**
  * Triggerのハンドラ。

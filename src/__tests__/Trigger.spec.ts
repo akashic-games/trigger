@@ -3,6 +3,7 @@
 
 import { Trigger } from "../Trigger";
 import type { TriggerLike } from "../TriggerLike";
+import { createWaiter } from "./helpers/createWaiter";
 
 describe("Triggerの正常系テスト", () => {
 	it("初期化", () => {
@@ -17,9 +18,9 @@ describe("Triggerの正常系テスト", () => {
 		const handler2 = (): void => {};
 		const handler3 = (): void => {};
 		const handler4 = (): void => {};
-		const handler5 = (): void => {};
-		const handler6 = (): void => {};
-		const handler7 = (): void => {};
+		const handler5 = async (): Promise<void> => {};
+		const handler6 = async (): Promise<void> => {};
+		const handler7 = async (): Promise<void> => {};
 		const owner1 = {};
 		const owner2 = {};
 		const owner3 = {};
@@ -61,9 +62,9 @@ describe("Triggerの正常系テスト", () => {
 		const handler2 = (): void => {};
 		const handler3 = (): void => {};
 		const handler4 = (): void => {};
-		const handler5 = (): void => {};
-		const handler6 = (): void => {};
-		const handler7 = (): void => {};
+		const handler5 = async (): Promise<void> => {};
+		const handler6 = async (): Promise<void> => {};
+		const handler7 = async (): Promise<void> => {};
 		const owner1 = {};
 		const owner2 = {};
 		const owner3 = {};
@@ -124,7 +125,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(owner.num).toBe(8);
 	});
 
-	it("fire()できる", () => {
+	it("同期関数をfire()できる", () => {
 		const trigger: TriggerLike<boolean> = new Trigger<boolean>();
 		let counter = 0;
 		const handler = (): void => {
@@ -139,7 +140,17 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.length).toBe(1);
 	});
 
-	it("fire()にパラメータを与えて実行することができる", () => {
+	it("非同期関数をfire()できる", done => {
+		const trigger: TriggerLike<boolean> = new Trigger<boolean>();
+		const handler = async (): Promise<void> => {
+			done();
+		};
+
+		trigger.add(handler);
+		trigger.fire();
+	});
+
+	it("fire()にパラメータを与えて同期関数を実行することができる", () => {
 		const trigger = new Trigger<any>();
 		let args: any = null;
 		const handler = (a: any): void => {
@@ -151,7 +162,18 @@ describe("Triggerの正常系テスト", () => {
 		expect(args).toEqual({ param: "hoge" });
 	});
 
-	it("fire()で実行されたhandler内のthisが正常に解決されている", () => {
+	it("fire()にパラメータを与えて非同期関数を実行することができる", done => {
+		const trigger = new Trigger<any>();
+		const handler = async (a: any): Promise<void> => {
+			expect(a).toEqual({ param: "hoge" });
+			done();
+		};
+
+		trigger.add(handler);
+		trigger.fire({ param: "hoge" });
+	});
+
+	it("fire()で実行された同期関数内のthisが正常に解決されている", () => {
 		const trigger = new Trigger();
 
 		let that: any = null;
@@ -171,7 +193,33 @@ describe("Triggerの正常系テスト", () => {
 		expect(that).toBe(testOwner);
 	});
 
-	it("fire()で実行されたhandlerが真を返すと削除される", () => {
+	it("fire()で実行された非同期関数内のthisが正常に解決されている", async () => {
+		const trigger = new Trigger();
+
+		let that: any = null;
+		const testOwner = { testMethod: () => "test" };
+		const { wait, resolve } = createWaiter();
+
+		// thisを束縛しないためにfunction構文を利用
+		const handler = async function(this: any): Promise<void> {
+			that = this;
+			resolve();
+		};
+
+		trigger.add(handler);
+		trigger.fire();
+
+		await wait();
+		expect(that).toBeUndefined();
+
+		trigger.add(handler, testOwner);
+		trigger.fire();
+
+		await wait();
+		expect(that).toBe(testOwner);
+	});
+
+	it("fire()で実行された同期関数が真を返すと削除される", () => {
 		const trigger = new Trigger<any>();
 
 		function handler(this: {overrideValue: boolean}, x: any): boolean {
@@ -201,7 +249,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.contains(handler, owner)).toBe(false);
 	});
 
-	it("addOnce()で追加したhandlerがfire()した後に消える", () => {
+	it("addOnce()で追加した同期関数がfire()した後に消える", () => {
 		const trigger = new Trigger();
 		let counter = 0;
 		const handler1 = (): void => {
@@ -225,7 +273,45 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger._handlers[1].func).toBe(handler3);
 	});
 
-	it("add()で追加したhandlerが配列の要素順に実行される", () => {
+	it("addOnce()で追加した非同期関数がfire()した後に消える", async () => {
+		const trigger = new Trigger();
+		let counter = 0;
+
+		const { wait: waitHandler1, resolve: resolveHandler1 } = createWaiter();
+		const { wait: waitHandler2, resolve: resolveHandler2 } = createWaiter();
+		const { wait: waitHandler3, resolve: resolveHandler3 } = createWaiter();
+
+		const handler1 = async (): Promise<void> => {
+			counter++;
+			resolveHandler1();
+		};
+		const handler2 = async (): Promise<void> => {
+			counter++;
+			resolveHandler2();
+		};
+		const handler3 = async (): Promise<unknown> => {
+			counter++;
+			resolveHandler3();
+			return true; // Promise の fulfilled 値は関係ないことを確認
+		};
+
+		trigger.add(handler1);
+		trigger.addOnce(handler2);
+		trigger.add(handler3);
+		expect(trigger.length).toBe(3);
+
+		trigger.fire();
+		await waitHandler1();
+		await waitHandler2();
+		await waitHandler3();
+
+		expect(counter).toBe(3);
+		expect(trigger.length).toBe(2);
+		expect(trigger._handlers[0].func).toBe(handler1);
+		expect(trigger._handlers[1].func).toBe(handler3);
+	});
+
+	it("add()で追加した同期関数が配列の要素順に実行される", () => {
 		const trigger = new Trigger();
 		const order = [] as number[];
 		const handler1 = (): void => {
@@ -249,7 +335,47 @@ describe("Triggerの正常系テスト", () => {
 		expect(order).toEqual([4, 1, 3, 2]);
 	});
 
-	it("addOnce()で追加したhandlerが配列の要素順に実行される", () => {
+	it("add()で追加した非同期関数が配列の要素順に実行される", async () => {
+		const trigger = new Trigger();
+
+		const { wait: waitHandler1, resolve: resolveHandler1 } = createWaiter();
+		const { wait: waitHandler2, resolve: resolveHandler2 } = createWaiter();
+		const { wait: waitHandler3, resolve: resolveHandler3 } = createWaiter();
+		const { wait: waitHandler4, resolve: resolveHandler4 } = createWaiter();
+
+		const order: number[] = [];
+		const handler1 = async (): Promise<void> => {
+			order.push(1);
+			resolveHandler1();
+		};
+		const handler2 = async (): Promise<void> => {
+			order.push(2);
+			resolveHandler2();
+		};
+		const handler3 = async (): Promise<void> => {
+			order.push(3);
+			resolveHandler3();
+		};
+		const handler4 = async (): Promise<void> => {
+			order.push(4);
+			resolveHandler4();
+		};
+
+		trigger.add(handler1); // 1
+		trigger.add(handler2); // 1, 2
+		trigger.add({func: handler3, index: 1}); // 1, 3, 2
+		trigger.add({func: handler4, index: 0}); // 4, 1, 3, 2
+
+		trigger.fire();
+		await waitHandler1();
+		await waitHandler2();
+		await waitHandler3();
+		await waitHandler4();
+
+		expect(order).toEqual([4, 1, 3, 2]);
+	});
+
+	it("addOnce()で追加した同期関数が配列の要素順に実行される", () => {
 		const trigger = new Trigger();
 		const order = [] as number[];
 		const handler1 = (): void => {
@@ -273,7 +399,47 @@ describe("Triggerの正常系テスト", () => {
 		expect(order).toEqual([3, 4, 2, 1]);
 	});
 
-	it("add(), addOnce()で同じhandlerを複数追加しても正しく実行される", () => {
+	it("addOnce()で追加した非同期関数が配列の要素順に実行される", async () => {
+		const trigger = new Trigger();
+
+		const { wait: waitHandler1, resolve: resolveHandler1 } = createWaiter();
+		const { wait: waitHandler2, resolve: resolveHandler2 } = createWaiter();
+		const { wait: waitHandler3, resolve: resolveHandler3 } = createWaiter();
+		const { wait: waitHandler4, resolve: resolveHandler4 } = createWaiter();
+
+		const order: number[] = [];
+		const handler1 = (): void => {
+			order.push(1);
+			resolveHandler1();
+		};
+		const handler2 = (): void => {
+			order.push(2);
+			resolveHandler2();
+		};
+		const handler3 = (): void => {
+			order.push(3);
+			resolveHandler3();
+		};
+		const handler4 = (): void => {
+			order.push(4);
+			resolveHandler4();
+		};
+
+		trigger.addOnce(handler1); // 1
+		trigger.addOnce({func: handler2, index: 0}); // 2, 1
+		trigger.addOnce({func: handler3, index: 0}); // 3, 2, 1
+		trigger.addOnce({func: handler4, index: 1}); // 3, 4, 2, 1
+
+		trigger.fire();
+		await waitHandler1();
+		await waitHandler2();
+		await waitHandler3();
+		await waitHandler4();
+
+		expect(order).toEqual([3, 4, 2, 1]);
+	});
+
+	it("add(), addOnce()で同じ同期関数を複数追加しても正しく実行される", () => {
 		const trigger = new Trigger();
 		let counter = 0;
 		const handler = (): void => {
@@ -293,7 +459,34 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.length).toBe(2);
 	});
 
-	it("destory()するとdestroyed()が確認できる", () => {
+	it("add(), addOnce()で同じ非同期関数を複数追加しても正しく実行される", async () => {
+		const trigger = new Trigger();
+		const { wait, resolve } = createWaiter();
+
+		let counter = 0;
+		const handler = (): void => {
+			counter++;
+			resolve();
+		};
+
+		trigger.add(handler);
+		trigger.add(handler);
+		trigger.addOnce(handler);
+		trigger.addOnce(handler);
+		expect(trigger.length).toBe(4);
+
+		trigger.fire();
+		await wait();
+		expect(counter).toBe(4);
+		expect(trigger.length).toBe(2);
+
+		trigger.fire();
+		await wait();
+		expect(counter).toBe(6);
+		expect(trigger.length).toBe(2);
+	});
+
+	it("destroy()するとdestroyed()が確認できる", () => {
 		const trigger = new Trigger<void>();
 		expect(trigger.destroyed()).toBe(false);
 		trigger.destroy();
@@ -314,7 +507,7 @@ describe("Triggerの正常系テスト", () => {
 
 	it("contains()できる: handlerとownerを指定", () => {
 		const trigger = new Trigger<void>();
-		const handler = (): void => {};
+		const handler = async (): Promise<void> => {};
 		const owner = {};
 
 		expect(trigger.contains(handler)).toBe(false);
@@ -491,10 +684,10 @@ describe("Triggerの正常系テスト", () => {
 		const handler = (): void => {
 			count++;
 		};
-		const anotherHander = (): void => {};
+		const anotherHandler = (): void => {};
 
 		expect(trigger.length).toBe(0);
-		trigger.add(anotherHander);
+		trigger.add(anotherHandler);
 		trigger.add(handler);
 		trigger.add({ func: handler });
 		trigger.add({ func: handler, name: "foo" });
@@ -514,7 +707,7 @@ describe("Triggerの正常系テスト", () => {
 		trigger.fire();
 		expect(count).toBe(6);
 
-		trigger.remove(handler);  // 残っている anotherHander や { func:handler, name:"foo" } とは完全一致しないので何も削除されない
+		trigger.remove(handler);  // 残っている anotherHandler や { func:handler, name:"foo" } とは完全一致しないので何も削除されない
 		expect(trigger.length).toBe(2);
 		trigger.fire();
 		expect(count).toBe(7);
@@ -710,7 +903,7 @@ describe("Triggerの正常系テスト", () => {
 
 describe("Triggerの異常系テスト", () => {
 	it("二重にdestroy()しても例外を吐かない", () => {
-		const trigger: TriggerLike<void> = new Trigger<void>();
+		const trigger = new Trigger<void>();
 		expect(trigger.length).toBe(0);
 		expect(trigger.destroyed()).toBe(false);
 
@@ -723,38 +916,57 @@ describe("Triggerの異常系テスト", () => {
 		expect(trigger.destroyed()).toBe(true);
 	});
 
-	it("fire()中でremoveAll()した場合でも正常に動作する", () => {
+	it("fire()中でremoveAll()した場合でも正常に動作する", async () => {
 		const trigger = new Trigger<void>();
-		const order: number[] = [];
+		let count = 0;
+		const { wait, resolve } = createWaiter();
+
 		trigger.add((): void => {
-			order.push(1); trigger.removeAll();
+			count++;
+			trigger.removeAll();
 		});
 		trigger.add((): void => {
-			order.push(2);
+			count++;
 		});
 		trigger.add((): void => {
-			order.push(3);
+			count++;
+		});
+		trigger.add(async (): Promise<void> => {
+			count++;
+			resolve();
 		});
 
 		trigger.fire();
-		expect(order).toEqual([1, 2, 3]);
+		await wait();
+
+		expect(count).toBe(4);
 	});
 
-	it("fire()中でdestroy()した場合でも正常に動作する", () => {
+	it("fire()中でdestroy()した場合でも正常に動作する", async () => {
 		const trigger = new Trigger<void>();
-		const order: number[] = [];
+		let count = 0;
+		const { wait, resolve } = createWaiter();
+
 		trigger.add((): void => {
-			order.push(1); trigger.destroy();
+			count++;
+			trigger.destroy();
 		});
 		trigger.add((): void => {
-			order.push(2);
+			count++;
 		});
 		trigger.add((): void => {
-			order.push(3);
+			count++;
+		});
+		trigger.add(async (): Promise<void> => {
+			count++;
+			resolve();
 		});
 
 		trigger.fire();
-		expect(order).toEqual([1, 2, 3]);
+		await wait();
+
+		trigger.fire();
+		expect(count).toBe(4);
 	});
 
 	it("addOnce()でfire()中にdestroy()した場合でも正常に動作する ", () => {
