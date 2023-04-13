@@ -12,5 +12,5 @@ export interface ChainTriggerLike<T> extends TriggerLike<T> {
 	chain: TriggerLike<T>;
 
 	filter: ChainTriggerFilterFunction<T> | null;
-	filterOwner: any;
+	filterOwner: unknown;
 }

@@ -22,7 +22,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 	 * フィルタのオーナー。
 	 * `filter` の呼び出し時、 `this` として与えられる。
 	 */
-	filterOwner: any;
+	filterOwner: unknown;
 
 	/**
 	 * `chain`に実際に`add`されているか否か。
@@ -38,7 +38,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 	 * @param filter `chain` がfireされたときに実行される関数。省略された場合、または本関数の戻り値が真の場合、このインスタンスをfireする。
 	 * @param filterOwner `filter` 呼び出し時に使われる `this` の値。
 	 */
-	constructor(chain: TriggerLike<T>, filter?: ChainTriggerFilterFunction<T>, filterOwner?: any) {
+	constructor(chain: TriggerLike<T>, filter?: ChainTriggerFilterFunction<T>, filterOwner?: unknown) {
 		super();
 
 		this.chain = chain;
@@ -47,7 +47,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 		this._isActivated = false;
 	}
 
-	add(paramsOrHandler: any, owner?: any): void {
+	add(paramsOrHandler: any, owner?: unknown): void {
 		super.add(paramsOrHandler, owner);
 
 		if (! this._isActivated) {
@@ -56,7 +56,7 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 		}
 	}
 
-	addOnce(paramsOrHandler: any, owner?: any): void {
+	addOnce(paramsOrHandler: any, owner?: unknown): void {
 		super.addOnce(paramsOrHandler, owner);
 
 		if (! this._isActivated) {
@@ -65,9 +65,9 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 		}
 	}
 
-	remove(func: HandlerFunction<T>, owner?: any): void;
+	remove(func: HandlerFunction<T>, owner?: unknown): void;
 	remove(params: TriggerRemoveConditions<T>): void;
-	remove(paramsOrFunc: any, owner?: any): void {
+	remove(paramsOrFunc: any, owner?: unknown): void {
 		super.remove(paramsOrFunc, owner);
 
 		if (this.length === 0 && this._isActivated) {
