@@ -140,7 +140,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.length).toBe(1);
 	});
 
-	it("Promise をfire()できる", done => {
+	it("Promise を返す関数をfire()できる", done => {
 		const trigger: TriggerLike<boolean> = new Trigger<boolean>();
 		const handler = async (): Promise<void> => {
 			done();
@@ -162,7 +162,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(args).toEqual({ param: "hoge" });
 	});
 
-	it("fire()にパラメータを与えて Promise を実行することができる", done => {
+	it("fire()にパラメータを与えて Promise を返す関数を実行することができる", done => {
 		const trigger = new Trigger<any>();
 		const handler = async (a: any): Promise<void> => {
 			expect(a).toEqual({ param: "hoge" });
@@ -193,7 +193,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(that).toBe(testOwner);
 	});
 
-	it("fire()で実行された Promise のthisが正常に解決されている", async () => {
+	it("fire()で実行された Promise を返す関数のthisが正常に解決されている", async () => {
 		const trigger = new Trigger();
 
 		let that: any = null;
@@ -219,7 +219,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(that).toBe(testOwner);
 	});
 
-	it("fire()で実行された Promise が真を返すと削除される", () => {
+	it("fire()で実行された関数が真を返すと削除される", () => {
 		const trigger = new Trigger<any>();
 
 		function handler(this: {overrideValue: boolean}, x: any): boolean {
@@ -273,7 +273,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger._handlers[1].func).toBe(handler3);
 	});
 
-	it("addOnce()で追加した Promise がfire()した後に消える", async () => {
+	it("addOnce()で追加した Promise を返す関数がfire()した後に消える", async () => {
 		const trigger = new Trigger();
 		let counter = 0;
 
@@ -335,7 +335,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(order).toEqual([4, 1, 3, 2]);
 	});
 
-	it("add()で追加した Promise が配列の要素順に実行される", async () => {
+	it("add()で追加した Promise を返す関数が配列の要素順に実行される", async () => {
 		const trigger = new Trigger();
 
 		const { wait: waitHandler1, resolve: resolveHandler1 } = createWaiter();
@@ -399,7 +399,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(order).toEqual([3, 4, 2, 1]);
 	});
 
-	it("addOnce()で追加した Promise が配列の要素順に実行される", async () => {
+	it("addOnce()で追加した Promise を返す関数が配列の要素順に実行される", async () => {
 		const trigger = new Trigger();
 
 		const { wait: waitHandler1, resolve: resolveHandler1 } = createWaiter();
@@ -459,7 +459,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.length).toBe(2);
 	});
 
-	it("add(), addOnce()で同じ Promise を複数追加しても正しく実行される", async () => {
+	it("add(), addOnce()で同じ Promise を返す関数を複数追加しても正しく実行される", async () => {
 		const trigger = new Trigger();
 		const { wait, resolve } = createWaiter();
 

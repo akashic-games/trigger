@@ -41,7 +41,7 @@ describe("ChainTriggerの正常系テスト", () => {
 		expect(counter).toBe(3);
 	});
 
-	it("Promise をfire()できる", async () => {
+	it("Promise を返す関数をfire()できる", async () => {
 		const trigger = new Trigger<boolean>();
 
 		const filter = (e: boolean): boolean => e;
