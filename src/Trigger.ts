@@ -139,7 +139,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 		for (let i = 0; i < handlers.length; i++) {
 			const handler = handlers[i];
 			const ret = handler.func.call<unknown, [T], void | boolean | Promise<unknown>>(handler.owner, arg);
-			const returnedTruthy = isPromise(ret) ? false : !!ret;
+			const returnedTruthy = !isPromise(ret) && !!ret;
 			if (returnedTruthy || handler.once) {
 				if (!this._handlers)
 					continue;
