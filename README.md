@@ -54,7 +54,7 @@ t.addOnce((s: string) => {
     // do something
 });
 
-// Promise のハンドラを追加
+// Promise を返すハンドラを追加
 t.addOnce(async (s: string) => {
     // do something
 });
