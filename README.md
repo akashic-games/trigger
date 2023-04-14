@@ -54,7 +54,7 @@ t.addOnce((s: string) => {
     // do something
 });
 
-// 非同期関数のハンドラを追加
+// Promise のハンドラを追加
 t.addOnce(async (s: string) => {
     // do something
 });

@@ -17,7 +17,7 @@ describe("ChainTriggerの正常系テスト", () => {
 		expect(chainTrigger.filter).toBe(filter);
 	});
 
-	it("同期関数をfire()できる", () => {
+	it("関数をfire()できる", () => {
 		const trigger = new Trigger<boolean>();
 
 		const filter = (e: boolean): boolean => e;
@@ -41,7 +41,7 @@ describe("ChainTriggerの正常系テスト", () => {
 		expect(counter).toBe(3);
 	});
 
-	it("非同期関数をfire()できる", async () => {
+	it("Promise をfire()できる", async () => {
 		const trigger = new Trigger<boolean>();
 
 		const filter = (e: boolean): boolean => e;

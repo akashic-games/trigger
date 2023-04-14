@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## unreleased changes
-* `Trigger` のハンドラ関数に非同期関数が渡せるように
+* `Trigger` のハンドラ関数に Promise を渡しても一度で解除されてしまわないように
 
 ## 1.0.1
 * `Trigger#addOnce()` のハンドラ内で `destroy()` が呼ばれた際にクラッシュしてしまうバグを修正

@@ -125,7 +125,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(owner.num).toBe(8);
 	});
 
-	it("同期関数をfire()できる", () => {
+	it("関数をfire()できる", () => {
 		const trigger: TriggerLike<boolean> = new Trigger<boolean>();
 		let counter = 0;
 		const handler = (): void => {
@@ -140,7 +140,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.length).toBe(1);
 	});
 
-	it("非同期関数をfire()できる", done => {
+	it("Promise をfire()できる", done => {
 		const trigger: TriggerLike<boolean> = new Trigger<boolean>();
 		const handler = async (): Promise<void> => {
 			done();
@@ -150,7 +150,7 @@ describe("Triggerの正常系テスト", () => {
 		trigger.fire();
 	});
 
-	it("fire()にパラメータを与えて同期関数を実行することができる", () => {
+	it("fire()にパラメータを与えて関数を実行することができる", () => {
 		const trigger = new Trigger<any>();
 		let args: any = null;
 		const handler = (a: any): void => {
@@ -162,7 +162,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(args).toEqual({ param: "hoge" });
 	});
 
-	it("fire()にパラメータを与えて非同期関数を実行することができる", done => {
+	it("fire()にパラメータを与えて Promise を実行することができる", done => {
 		const trigger = new Trigger<any>();
 		const handler = async (a: any): Promise<void> => {
 			expect(a).toEqual({ param: "hoge" });
@@ -173,7 +173,7 @@ describe("Triggerの正常系テスト", () => {
 		trigger.fire({ param: "hoge" });
 	});
 
-	it("fire()で実行された同期関数内のthisが正常に解決されている", () => {
+	it("fire()で実行された関数内のthisが正常に解決されている", () => {
 		const trigger = new Trigger();
 
 		let that: any = null;
@@ -193,7 +193,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(that).toBe(testOwner);
 	});
 
-	it("fire()で実行された非同期関数内のthisが正常に解決されている", async () => {
+	it("fire()で実行された Promise のthisが正常に解決されている", async () => {
 		const trigger = new Trigger();
 
 		let that: any = null;
@@ -219,7 +219,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(that).toBe(testOwner);
 	});
 
-	it("fire()で実行された同期関数が真を返すと削除される", () => {
+	it("fire()で実行された Promise が真を返すと削除される", () => {
 		const trigger = new Trigger<any>();
 
 		function handler(this: {overrideValue: boolean}, x: any): boolean {
@@ -249,7 +249,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.contains(handler, owner)).toBe(false);
 	});
 
-	it("addOnce()で追加した同期関数がfire()した後に消える", () => {
+	it("addOnce()で追加した関数がfire()した後に消える", () => {
 		const trigger = new Trigger();
 		let counter = 0;
 		const handler1 = (): void => {
@@ -273,7 +273,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger._handlers[1].func).toBe(handler3);
 	});
 
-	it("addOnce()で追加した非同期関数がfire()した後に消える", async () => {
+	it("addOnce()で追加した Promise がfire()した後に消える", async () => {
 		const trigger = new Trigger();
 		let counter = 0;
 
@@ -311,7 +311,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger._handlers[1].func).toBe(handler3);
 	});
 
-	it("add()で追加した同期関数が配列の要素順に実行される", () => {
+	it("add()で追加した関数が配列の要素順に実行される", () => {
 		const trigger = new Trigger();
 		const order = [] as number[];
 		const handler1 = (): void => {
@@ -335,7 +335,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(order).toEqual([4, 1, 3, 2]);
 	});
 
-	it("add()で追加した非同期関数が配列の要素順に実行される", async () => {
+	it("add()で追加した Promise が配列の要素順に実行される", async () => {
 		const trigger = new Trigger();
 
 		const { wait: waitHandler1, resolve: resolveHandler1 } = createWaiter();
@@ -375,7 +375,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(order).toEqual([4, 1, 3, 2]);
 	});
 
-	it("addOnce()で追加した同期関数が配列の要素順に実行される", () => {
+	it("addOnce()で追加した関数が配列の要素順に実行される", () => {
 		const trigger = new Trigger();
 		const order = [] as number[];
 		const handler1 = (): void => {
@@ -399,7 +399,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(order).toEqual([3, 4, 2, 1]);
 	});
 
-	it("addOnce()で追加した非同期関数が配列の要素順に実行される", async () => {
+	it("addOnce()で追加した Promise が配列の要素順に実行される", async () => {
 		const trigger = new Trigger();
 
 		const { wait: waitHandler1, resolve: resolveHandler1 } = createWaiter();
@@ -439,7 +439,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(order).toEqual([3, 4, 2, 1]);
 	});
 
-	it("add(), addOnce()で同じ同期関数を複数追加しても正しく実行される", () => {
+	it("add(), addOnce()で同じ関数を複数追加しても正しく実行される", () => {
 		const trigger = new Trigger();
 		let counter = 0;
 		const handler = (): void => {
@@ -459,7 +459,7 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.length).toBe(2);
 	});
 
-	it("add(), addOnce()で同じ非同期関数を複数追加しても正しく実行される", async () => {
+	it("add(), addOnce()で同じ Promise を複数追加しても正しく実行される", async () => {
 		const trigger = new Trigger();
 		const { wait, resolve } = createWaiter();
 

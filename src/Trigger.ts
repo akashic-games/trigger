@@ -127,7 +127,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	 * 呼び出し後、次のいずれかの条件を満たす全ハンドラの登録は解除される。
 	 * * ハンドラが `addOnce()` で登録されていた場合
 	 * * ハンドラが `add()` で登録される際に `once: true` オプションが与えられていた場合
-	 * * ハンドラが同期関数で、かつ truthy な値を返した場合
+	 * * ハンドラが Promise 以外の truthy な値を返した場合
 	 *
 	 * @param arg ハンドラに与えられる引数
 	 */
