@@ -3,6 +3,7 @@
 
 import { ChainTrigger } from "../ChainTrigger";
 import { Trigger } from "../Trigger";
+import { createWaiter } from "./helpers/createWaiter";
 
 describe("ChainTriggerの正常系テスト", () => {
 	it("初期化", () => {
@@ -16,7 +17,7 @@ describe("ChainTriggerの正常系テスト", () => {
 		expect(chainTrigger.filter).toBe(filter);
 	});
 
-	it("fire()できる", () => {
+	it("関数をfire()できる", () => {
 		const trigger = new Trigger<boolean>();
 
 		const filter = (e: boolean): boolean => e;
@@ -38,6 +39,25 @@ describe("ChainTriggerの正常系テスト", () => {
 		expect(counter).toBe(2);
 		trigger.fire(true);
 		expect(counter).toBe(3);
+	});
+
+	it("Promise を返す関数をfire()できる", async () => {
+		const trigger = new Trigger<boolean>();
+
+		const filter = (e: boolean): boolean => e;
+		const filterOwner = {};
+		const chainTrigger = new ChainTrigger<boolean>(trigger, filter, filterOwner);
+		const { wait, resolve } = createWaiter();
+		let counter = 0;
+		const handler = async (): Promise<void> => {
+			counter++;
+			resolve();
+		};
+		chainTrigger.add(handler);
+
+		trigger.fire(true);
+		await wait();
+		expect(counter).toBe(1);
 	});
 
 	it("addOnce()できる", () => {

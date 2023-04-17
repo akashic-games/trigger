@@ -1,3 +1,4 @@
+import { isPromise } from "./isPromise";
 import type {
 	HandlerFunction,
 	TriggerHandler,
@@ -32,13 +33,13 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	 * @param func ハンドラの関数
 	 * @param owner ハンドラのオーナー。 `func` を呼び出す時に `this` として用いられる値
 	 */
-	add(func: HandlerFunction<T>, owner?: any): void;
+	add(func: HandlerFunction<T>, owner?: unknown): void;
 	/**
 	 * このTriggerにハンドラを追加する。
 	 * @param params 登録するハンドラの情報
 	 */
 	add(params: TriggerAddParameters<T>): void;
-	add(paramsOrFunc: any, owner?: any): void {
+	add(paramsOrFunc: any, owner?: unknown): void {
 		if (typeof paramsOrFunc === "function") {
 			this._handlers.push({
 				func: paramsOrFunc as HandlerFunction<T>,
@@ -74,14 +75,14 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	 * @param func ハンドラの関数
 	 * @param owner ハンドラのオーナー。 `func` を呼び出す時に `this` として用いられる値
 	 */
-	addOnce(func: HandlerFunction<T>, owner?: any): void;
+	addOnce(func: HandlerFunction<T>, owner?: unknown): void;
 	/**
 	 * このTriggerにハンドラを追加する。
 	 * 本メソッドにより追加されたハンドラは実行後に破棄される。
 	 * @param params 登録するハンドラの情報
 	 */
 	addOnce(params: TriggerAddParameters<T>): void;
-	addOnce(paramsOrFunc: any, owner?: any): void {
+	addOnce(paramsOrFunc: any, owner?: unknown): void {
 		if (typeof paramsOrFunc === "function") {
 			this._handlers.push({
 				func: paramsOrFunc as HandlerFunction<T>,
@@ -126,7 +127,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	 * 呼び出し後、次のいずれかの条件を満たす全ハンドラの登録は解除される。
 	 * * ハンドラが `addOnce()` で登録されていた場合
 	 * * ハンドラが `add()` で登録される際に `once: true` オプションが与えられていた場合
-	 * * 関数がtruthyな値を返した場合
+	 * * ハンドラが Promise 以外の truthy な値を返した場合
 	 *
 	 * @param arg ハンドラに与えられる引数
 	 */
@@ -137,7 +138,9 @@ export class Trigger<T = void> implements TriggerLike<T> {
 		const handlers = this._handlers.concat();
 		for (let i = 0; i < handlers.length; i++) {
 			const handler = handlers[i];
-			if (handler.func.call(handler.owner, arg) || handler.once) {
+			const ret = handler.func.call<unknown, [T], void | boolean | Promise<unknown>>(handler.owner, arg);
+			const returnedTruthy = !isPromise(ret) && !!ret;
+			if (returnedTruthy || handler.once) {
 				if (!this._handlers)
 					continue;
 				const index = this._handlers.indexOf(handler);
@@ -156,7 +159,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	 * @param func 条件として用いるハンドラの関数
 	 * @param owner 条件として用いるハンドラのオーナー
 	 */
-	contains(func: HandlerFunction<T> | null, owner?: any): boolean;
+	contains(func: HandlerFunction<T> | null, owner?: unknown): boolean;
 	/**
 	 * 指定した条件に一致したハンドラが登録されているかを返す。
 	 * 指定されなかった条件は、条件として無視される(登録時の値に関わらず一致するとみなされる)。
@@ -164,7 +167,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	 * @param params 検索の条件
 	 */
 	contains(params: TriggerSearchConditions<T>): boolean;
-	contains(paramsOrFunc: any, owner?: any): boolean {
+	contains(paramsOrFunc: any, owner?: unknown): boolean {
 		const condition = typeof paramsOrFunc === "function" ? { func: paramsOrFunc, owner } : paramsOrFunc;
 
 		for (let i = 0; i < this._handlers.length; i++) {
@@ -182,7 +185,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	 * @param func 削除条件として用いるハンドラの関数
 	 * @param owner 削除条件として用いるハンドラのオーナー。省略した場合、 `undefined`
 	 */
-	remove(func: HandlerFunction<T>, owner?: any): void;
+	remove(func: HandlerFunction<T>, owner?: unknown): void;
 	/**
 	 * 指定した条件に完全一致するハンドラを削除する。
 	 * 同じ組み合わせで複数登録されている場合、一つだけ削除する。
@@ -190,7 +193,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	 * @param params 削除するハンドラの条件
 	 */
 	remove(params: TriggerRemoveConditions<T>): void;
-	remove(paramsOrFunc: any, owner?: any): void {
+	remove(paramsOrFunc: any, owner?: unknown): void {
 		const condition = typeof paramsOrFunc === "function" ? { func: paramsOrFunc, owner } : paramsOrFunc;
 		for (let i = 0; i < this._handlers.length; i++) {
 			const handler = this._handlers[i];
