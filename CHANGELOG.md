@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## unreleased changes
+## 2.0.0
 * `Trigger` のハンドラ関数が Promise を渡した場合に一度で登録が解除されてしまわないように
 
 ## 1.0.1
