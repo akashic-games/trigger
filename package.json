@@ -4,11 +4,11 @@
   "description": "An event emitting module for TypeScript",
   "type": "module",
   "types": "lib/index.d.ts",
-  "main": "./dist/cjs/index.js",
+  "main": "./dist/cjs/index.cjs",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "require": "./dist/cjs/index.cjs"
     }
   },
   "scripts": {

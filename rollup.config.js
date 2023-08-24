@@ -7,11 +7,11 @@ export default {
   input: "src/index.ts",
   output: [
     {
-      file: "dist/cjs/index.js",
+      file: "dist/cjs/index.cjs",
       format: "cjs",
     },
     {
-      file: "dist/cjs/index.min.js",
+      file: "dist/cjs/index.min.cjs",
       format: "cjs",
       plugins: [terser()],
     },
