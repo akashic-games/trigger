@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.1
+* 内部のビルドシステム変更
+  * CommonJS と ES Module の dual package に変更します
+  * 利用側に影響はありません
+
 ## 2.0.0
 * `Trigger` のハンドラ関数が Promise を渡した場合に一度で登録が解除されてしまわないように
 

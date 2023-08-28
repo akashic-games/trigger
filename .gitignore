@@ -1,7 +1,8 @@
-node_modules
-coverage
-lib
-tmp
+node_modules/
+coverage/
+lib/
+dist/
+
 .DS_Store*
 *.log
 *.iml

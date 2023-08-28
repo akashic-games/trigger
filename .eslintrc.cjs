@@ -7,6 +7,9 @@ module.exports = {
   },
   ignorePatterns: [
     "*.js",
+    "*.cjs",
+    "dist/**/*",
+    "lib/**/*",
     "**/*.d.ts"
   ]
 }
