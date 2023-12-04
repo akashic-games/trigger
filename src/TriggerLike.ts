@@ -9,6 +9,8 @@ export type HandlerSyncFunction<T> = (arg: T) => void | boolean;
 
 export type HandlerAsyncFunction<T> = (arg: T) => Promise<unknown>;
 
+export type HandlerFilterFunction<T> = (handler: TriggerHandler<T>) => boolean;
+
 /**
  * Triggerのハンドラ。
  */
@@ -30,6 +32,10 @@ export interface TriggerHandler<T> {
 	 * ハンドラの名前。
 	 */
 	name: string | null | undefined;
+	/**
+	 * ハンドラを発火する条件。
+	 */
+	filter: HandlerFilterFunction<T> | undefined;
 }
 
 /**
@@ -54,6 +60,10 @@ export interface TriggerAddParameters<T> {
 	 * 通常、指定する必要はない。省略した場合、ハンドラは末尾に追加される。
 	 */
 	index?: number;
+	/**
+	 * ハンドラを発火する条件。
+	 */
+	filter?: HandlerFilterFunction<T>;
 }
 
 /**
@@ -84,6 +94,14 @@ export interface TriggerRemoveConditions<T> {
 	 * 省略された場合、 `removeAll()` ではこの値に関係なく他の条件にマッチする限り削除される。
 	 */
 	name?: string;
+	/**
+	 * ハンドラを発火する条件。
+	 *
+	 * 登録時 `filter` に指定された値がこの値と同値でないハンドラは削除されない。
+	 * 省略された場合、 `remove()` では `undefined` とみなされる。
+	 * 省略された場合、 `removeAll()` ではこの値に関係なく他の条件にマッチする限り削除される。
+	 */
+	filter?: HandlerFilterFunction<T>;
 }
 
 /**
@@ -93,6 +111,7 @@ export interface TriggerSearchConditions<T> {
 	func?: HandlerFunction<T>;
 	owner?: unknown;
 	name?: string | null;
+	filter?: HandlerFilterFunction<T>;
 }
 
 /**
@@ -132,7 +151,7 @@ export interface TriggerLike<T> {
 
 	/**
 	 * このTriggerにハンドラを追加する。
-	 * @deprecated 互換性のために残されている。代わりに `add()` を利用すべきである。実装の変化のため、 `func` が `boolean` を返した時の動作はサポートされていない。
+	 * @deprecated 互換性のために残されている。代わりに `add()` を利用すべきである。
 	 */
 	handle(owner: any, func?: HandlerFunction<T>, name?: string): void;
 
