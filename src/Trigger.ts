@@ -41,29 +41,23 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	add(params: TriggerAddParameters<T>): void;
 	add(paramsOrFunc: any, owner?: unknown): void {
 		if (typeof paramsOrFunc === "function") {
-			this._handlers.push({
+			this._addHandler({
 				func: paramsOrFunc as HandlerFunction<T>,
 				owner,
 				once: false,
-				name: undefined
+				name: undefined,
+				filter: undefined,
 			});
 		} else {
 			const params = paramsOrFunc as TriggerAddParameters<T>;
-			if (typeof params.index === "number") {
-				this._handlers.splice(params.index, 0, {
-					func: params.func,
-					owner: params.owner,
-					once: false,
-					name: params.name
-				});
-			} else {
-				this._handlers.push({
-					func: params.func,
-					owner: params.owner,
-					once: false,
-					name: params.name
-				});
-			}
+			const index = typeof params.index === "number" ? params.index : undefined;
+			this._addHandler({
+				func: params.func,
+				owner: params.owner,
+				once: false,
+				name: params.name,
+				filter: params.filter,
+			}, index);
 		}
 
 		this.length = this._handlers.length;
@@ -84,29 +78,23 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	addOnce(params: TriggerAddParameters<T>): void;
 	addOnce(paramsOrFunc: any, owner?: unknown): void {
 		if (typeof paramsOrFunc === "function") {
-			this._handlers.push({
+			this._addHandler({
 				func: paramsOrFunc as HandlerFunction<T>,
 				owner,
 				once: true,
-				name: undefined
+				name: undefined,
+				filter: undefined,
 			});
 		} else {
 			const params = paramsOrFunc as TriggerAddParameters<T>;
-			if (typeof params.index === "number") {
-				this._handlers.splice(params.index, 0, {
-					func: params.func,
-					owner: params.owner,
-					once: true,
-					name: params.name
-				});
-			} else {
-				this._handlers.push({
-					func: params.func,
-					owner: params.owner,
-					once: true,
-					name: params.name
-				});
-			}
+			const index = typeof params.index === "number" ? params.index : undefined;
+			this._addHandler({
+				func: params.func,
+				owner: params.owner,
+				once: true,
+				name: params.name,
+				filter: params.filter
+			}, index);
 		}
 
 		this.length = this._handlers.length;
@@ -114,7 +102,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 
 	/**
 	 * このTriggerにハンドラを追加する。
-	 * @deprecated 互換性のために残されている。代わりに `add()` を利用すべきである。実装の変化のため、 `func` が `boolean` を返した時の動作はサポートされていない。
+	 * @deprecated 互換性のために残されている。代わりに `add()` を利用すべきである。
 	 */
 	handle(owner: any, func?: HandlerFunction<T>, name?: string): void {
 		this.add(func ? { owner, func, name } : { func: owner });
@@ -138,6 +126,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 		const handlers = this._handlers.concat();
 		for (let i = 0; i < handlers.length; i++) {
 			const handler = handlers[i];
+			if (handler.filter && !handler.filter(handler)) continue;
 			const ret = handler.func.call<unknown, [T], void | boolean | Promise<unknown>>(handler.owner, arg);
 			const returnedTruthy = !isPromise(ret) && !!ret;
 			if (returnedTruthy || handler.once) {
@@ -180,7 +169,7 @@ export class Trigger<T = void> implements TriggerLike<T> {
 
 	/**
 	 * 関数が `func` であり、かつオーナーが `owner` であるハンドラを削除する。
-	 * 同じ組み合わせで複数登録されている場合、一つだけ削除する。
+	 * 同じ組み合わせで複数登録されている場合、index が最も小さいハンドラのみ削除する。
 	 *
 	 * @param func 削除条件として用いるハンドラの関数
 	 * @param owner 削除条件として用いるハンドラのオーナー。省略した場合、 `undefined`
@@ -188,16 +177,21 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	remove(func: HandlerFunction<T>, owner?: unknown): void;
 	/**
 	 * 指定した条件に完全一致するハンドラを削除する。
-	 * 同じ組み合わせで複数登録されている場合、一つだけ削除する。
+	 * 同じ組み合わせで複数登録されている場合、index が最も小さいハンドラのみ削除する。
 	 *
 	 * @param params 削除するハンドラの条件
 	 */
 	remove(params: TriggerRemoveConditions<T>): void;
 	remove(paramsOrFunc: any, owner?: unknown): void {
-		const condition = typeof paramsOrFunc === "function" ? { func: paramsOrFunc, owner } : paramsOrFunc;
+		const condition: TriggerRemoveConditions<T> = typeof paramsOrFunc === "function" ? { func: paramsOrFunc, owner } : paramsOrFunc;
 		for (let i = 0; i < this._handlers.length; i++) {
 			const handler = this._handlers[i];
-			if (condition.func === handler.func && condition.owner === handler.owner && condition.name === handler.name) {
+			if (
+				condition.func === handler.func &&
+				condition.owner === handler.owner &&
+				condition.name === handler.name &&
+				condition.filter === handler.filter
+			) {
 				this._handlers.splice(i, 1);
 				--this.length;
 				return;
@@ -249,12 +243,37 @@ export class Trigger<T = void> implements TriggerLike<T> {
 	/**
 	 * @private
 	 */
+	_addHandler(params: TriggerHandler<T>, index?: number): void {
+		if (index == null) {
+			this._handlers.push({
+				func: params.func,
+				owner: params.owner,
+				once: params.once,
+				name: params.name,
+				filter: params.filter,
+			});
+		} else {
+			this._handlers.splice(index, 0, {
+				func: params.func,
+				owner: params.owner,
+				once: params.once,
+				name: params.name,
+				filter: params.filter,
+			});
+		}
+	}
+
+	/**
+	 * @private
+	 */
 	_comparePartial(target: TriggerSearchConditions<T>, compare: TriggerSearchConditions<T>): boolean {
 		if (target.func !== undefined && target.func !== compare.func)
 			return false;
 		if (target.owner !== undefined && target.owner !== compare.owner)
 			return false;
 		if (target.name !== undefined && target.name !== compare.name)
+			return false;
+		if (target.filter !== undefined && target.filter !== compare.filter)
 			return false;
 
 		return true;

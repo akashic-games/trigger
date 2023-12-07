@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2.1.0
+* `Trigger` のハンドラ関数の登録時に `filter` を指定できるように
+
 ## 2.0.1
 * 内部のビルドシステム変更
   * CommonJS と ES Module の dual package に変更します

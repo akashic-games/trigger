@@ -486,6 +486,36 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.length).toBe(2);
 	});
 
+	it("filter が falsy な値を返した場合は add()で追加した関数が実行されない", async () => {
+		const trigger = new Trigger();
+
+		let counter = 0;
+		let filtered = false;
+		trigger.add({
+			func: () => void counter++,
+			filter: () => filtered,
+		});
+
+		trigger.fire();
+		expect(counter).toBe(0);
+		trigger.fire();
+		expect(counter).toBe(0);
+
+		filtered = true;
+
+		trigger.fire();
+		expect(counter).toBe(1);
+		trigger.fire();
+		expect(counter).toBe(2);
+
+		filtered = false;
+
+		trigger.fire();
+		expect(counter).toBe(2);
+		trigger.fire();
+		expect(counter).toBe(2);
+	});
+
 	it("destroy()するとdestroyed()が確認できる", () => {
 		const trigger = new Trigger<void>();
 		expect(trigger.destroyed()).toBe(false);
@@ -553,6 +583,20 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.contains({func: handler, name: "bar"})).toBe(false);
 		expect(trigger.contains({func: handler, owner: {}, name: "foo"})).toBe(false);
 		expect(trigger.contains({func: () => {}, owner, name: "foo"})).toBe(false);
+	});
+
+	it("contains()できる: filterを指定", () => {
+		const trigger = new Trigger<void>();
+		const handler = (): void => {};
+		const filter = (): boolean => true;
+
+		expect(trigger.contains(handler)).toBe(false);
+		expect(trigger.contains({func: handler, filter})).toBe(false);
+
+		trigger.add({func: handler, filter});
+		expect(trigger.contains({func: handler, filter})).toBe(true);
+		expect(trigger.contains({func: handler, filter, name: "bar"})).toBe(false);
+		expect(trigger.contains({func: handler, filter, owner: {}})).toBe(false);
 	});
 
 	it("contains()できる: 複数のhandler", () => {
@@ -797,6 +841,31 @@ describe("Triggerの正常系テスト", () => {
 		expect(trigger.length).toBe(3);
 
 		trigger.removeAll({owner: owner1});
+		expect(trigger.contains(handler1)).toBe(false);
+		expect(trigger.contains(handler2)).toBe(true);
+		expect(trigger.contains(handler3)).toBe(false);
+		expect(trigger._handlers.length).toBe(1);
+		expect(trigger.length).toBe(1);
+	});
+
+	it("removeAll()できる: filterのみを指定", () => {
+		const trigger = new Trigger<void>();
+		const handler1 = (): void => {};
+		const handler2 = (): void => {};
+		const handler3 = (): void => {};
+		const filter1 = (): boolean => true;
+		const filter2 = (): boolean => false;
+
+		expect(trigger.length).toBe(0);
+		trigger.add({func: handler1, filter: filter1});
+		trigger.add({func: handler2, filter: filter2});
+		trigger.add({func: handler3, filter: filter1});
+		expect(trigger.contains(handler1)).toBe(true);
+		expect(trigger.contains(handler2)).toBe(true);
+		expect(trigger.contains(handler3)).toBe(true);
+		expect(trigger.length).toBe(3);
+
+		trigger.removeAll({filter: filter1});
 		expect(trigger.contains(handler1)).toBe(false);
 		expect(trigger.contains(handler2)).toBe(true);
 		expect(trigger.contains(handler3)).toBe(false);

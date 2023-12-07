@@ -1,6 +1,6 @@
 import type { ChainTriggerLike, ChainTriggerFilterFunction } from "./ChainTriggerLike";
 import { Trigger } from "./Trigger";
-import type { TriggerLike, TriggerRemoveConditions, HandlerFunction } from "./TriggerLike";
+import type { TriggerLike, TriggerRemoveConditions, HandlerFunction, TriggerAddParameters } from "./TriggerLike";
 
 /**
  * 他のTriggerLikeに反応して発火するイベント通知機構。
@@ -47,6 +47,8 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 		this._isActivated = false;
 	}
 
+	add(func: HandlerFunction<T>, owner?: unknown): void;
+	add(params: TriggerAddParameters<T>): void;
 	add(paramsOrHandler: any, owner?: unknown): void {
 		super.add(paramsOrHandler, owner);
 
@@ -56,6 +58,8 @@ export class ChainTrigger<T> extends Trigger<T> implements ChainTriggerLike<T> {
 		}
 	}
 
+	addOnce(func: HandlerFunction<T>, owner?: unknown): void;
+	addOnce(params: TriggerAddParameters<T>): void;
 	addOnce(paramsOrHandler: any, owner?: unknown): void {
 		super.addOnce(paramsOrHandler, owner);
 
