@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## unreleased changes
+## 2.1.0
 * `Trigger` のハンドラ関数の登録時に `filter` を指定できるように
 
 ## 2.0.1
