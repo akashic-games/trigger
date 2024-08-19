@@ -1,19 +1,15 @@
 {
-  "compilerOptions": {
-    "module": "ESNext",
-    "target": "ES2021",
-    "lib": ["ES2021"],
-    "moduleResolution": "node",
-    "declaration": true,
-    "noImplicitAny": true,
-    "outDir": "./lib",
-    "sourceMap": false,
-    "strict": true
-  },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "src/__tests__/**/*.ts"
-  ]
+	"compilerOptions": {
+		"module": "Node16",
+		"target": "ES2021",
+		"lib": ["ES2021"],
+		"moduleResolution": "Node16",
+		"declaration": true,
+		"noImplicitAny": true,
+		"outDir": "./lib",
+		"sourceMap": false,
+		"strict": true
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": ["src/__tests__/**/*.ts"]
 }
