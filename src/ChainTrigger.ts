@@ -1,6 +1,6 @@
-import type { ChainTriggerLike, ChainTriggerFilterFunction } from "./ChainTriggerLike";
-import { Trigger } from "./Trigger";
-import type { TriggerLike, TriggerRemoveConditions, HandlerFunction, TriggerAddParameters } from "./TriggerLike";
+import type { ChainTriggerLike, ChainTriggerFilterFunction } from "./ChainTriggerLike.js";
+import { Trigger } from "./Trigger.js";
+import type { TriggerLike, TriggerRemoveConditions, HandlerFunction, TriggerAddParameters } from "./TriggerLike.js";
 
 /**
  * 他のTriggerLikeに反応して発火するイベント通知機構。

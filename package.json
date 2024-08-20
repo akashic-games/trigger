@@ -1,14 +1,20 @@
 {
   "name": "@akashic/trigger",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "An event emitting module for TypeScript",
   "type": "module",
-  "types": "lib/index.d.ts",
+  "types": "./lib/index.d.ts",
   "main": "./dist/cjs/index.cjs",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.cjs"
+      "import": {
+        "types": "./lib/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./lib/index.d.ts",
+        "default": "./dist/cjs/index.cjs"
+      }
     }
   },
   "scripts": {

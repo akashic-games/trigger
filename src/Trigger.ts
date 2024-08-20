@@ -1,4 +1,4 @@
-import { isPromise } from "./isPromise";
+import { isPromise } from "./isPromise.js";
 import type {
 	HandlerFunction,
 	TriggerHandler,
@@ -6,7 +6,7 @@ import type {
 	TriggerRemoveConditions,
 	TriggerSearchConditions,
 	TriggerLike
-} from "./TriggerLike";
+} from "./TriggerLike.js";
 
 /**
  * イベント通知機構クラス。
