@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2.1.2
+* package.json の type の指定を `"commonjs"` に修正
+
 ## 2.1.1
 * ESM から import した際に型定義が正常に読み込まれないバグを修正
 
