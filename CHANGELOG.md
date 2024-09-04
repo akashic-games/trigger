@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2.1.3
+* package.json の exports.require の指定が誤っていたため修正
+
 ## 2.1.2
 * package.json の type の指定を `"commonjs"` に修正
 

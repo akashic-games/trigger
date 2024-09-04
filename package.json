@@ -1,6 +1,6 @@
 {
   "name": "@akashic/trigger",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "An event emitting module for TypeScript",
   "type": "commonjs",
   "types": "./dist/esm/index.d.ts",
@@ -13,7 +13,7 @@
       },
       "require": {
         "types": "./lib/index.d.ts",
-        "default": "./lib/index.cjs"
+        "default": "./lib/index.js"
       }
     },
     "./lib/*": {
