@@ -13,7 +13,7 @@
       },
       "require": {
         "types": "./lib/index.d.ts",
-        "default": "./lib/index.cjs"
+        "default": "./lib/index.js"
       }
     },
     "./lib/*": {
