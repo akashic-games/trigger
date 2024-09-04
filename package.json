@@ -1,30 +1,41 @@
 {
   "name": "@akashic/trigger",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "An event emitting module for TypeScript",
-  "type": "module",
-  "types": "./lib/index.d.ts",
-  "main": "./dist/cjs/index.cjs",
+  "type": "commonjs",
+  "types": "./dist/esm/index.d.ts",
+  "main": "./lib/index.js",
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/index.d.ts",
+        "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
       },
       "require": {
         "types": "./lib/index.d.ts",
-        "default": "./dist/cjs/index.cjs"
+        "default": "./lib/index.cjs"
       }
-    }
+    },
+    "./lib/*": {
+      "import": {
+        "types": "./dist/esm/*.d.ts",
+        "default": "./dist/esm/*"
+      },
+      "require": {
+        "types": "./lib/*.d.ts",
+        "default": "./lib/*"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
     "prepare": "npm run clean && npm run build",
     "clean": "rimraf lib/ dist/",
     "build": "npm run clean && run-s build:*",
-    "build:tsc": "tsc",
-    "build:bundle": "rollup -c",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
     "test": "run-s test:*",
-    "test:jest": "jest --config jest.config.js",
+    "test:jest": "jest --config jest.config.mjs",
     "test:lint": "run-s test:lint:*",
     "test:lint:ts": "eslint src/**/*.ts --fix",
     "test:lint:md": "remark ./*.md --frail --no-stdout --quiet --rc-path ./.remarkrc"
@@ -47,10 +58,6 @@
   },
   "devDependencies": {
     "@akashic/eslint-config": "^2.0.0",
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^11.1.5",
     "@types/jest": "^29.5.6",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "eslint": "^8.52.0",
@@ -59,7 +66,6 @@
     "remark-cli": "^12.0.0",
     "remark-lint": "^9.1.2",
     "rimraf": "^5.0.5",
-    "rollup": "^4.1.4",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
   }
